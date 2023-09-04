@@ -58,21 +58,21 @@ backup() {
     # Capture the current date
     snapshot_date=$(date +"%d_%m_%Y")        # %d:day, %m:month, %Y:year , example: snapshot_date: 24_8_2023
 
-    # Create a directory to store all modified files within the source directory
+    # Create a directory to store all modified files within the source directory to be backedup
     backup_dir="${snapshot_date}"
     mkdir -p $backup_dir
 
 
-    # Loop over sub-directories in the source directory
+    # Loop over all sub-directories in the source directory to capture all modified files within each sub-directory
     for subdir in "$source_directory"/*/; do
         if [ -d "$subdir" ]; then
             dir_name=$(basename "$subdir")
             modified_files=0
 
-            # Create an array of modified files in the subdirectory
+            # Create a list of modified files in the sub-directory
             modified_file_list=()
 
-            # Loop over all files in the subdirectory and add modified files to the array
+            # Loop over all files in the subdirectory and add modified files to the list
             for file in "$subdir"/*; do
                 if [ -f "$file" ]; then
                     if [ $(stat -c %Y "$file") -ge $(date -d "-$days_threshold days" +%s) ]; then
@@ -82,11 +82,12 @@ backup() {
                 fi
             done
 
+            # If there is modified files in the list, put them in tar file & encrypt them, then remove the tar file after generate an encrypted one 
             if [ "$modified_files" -eq 1 ]; then
                 # Create a .tgz archive for modified files in the sub-directories
                 tar -czf "${backup_dir}/${dir_name}_${snapshot_date}.tgz" -C "$subdir" "${modified_file_list[@]}"
+                # Encrypt the .tgz file
                 gpg --encrypt --recipient "$encryption_key" "${backup_dir}/${dir_name}_${snapshot_date}.tgz"
-
                 # Remove the .tgz files after encrypting them
                 rm "${backup_dir}/${dir_name}_${snapshot_date}.tgz"
             fi
@@ -109,7 +110,8 @@ backup() {
             # Extract the file name without the extension
             file_name=$(basename "${encrypted_file%.tgz.gpg}")
 
-            if [ $first_encrypted -eq 0 ]; then
+            # If it is the first file, create a new tar file, if not, append this file to the first created tar file
+            if [ $first_encrypted -eq 0 ]; then  
 
                 # Create a new tar file and add the first encrypted file
                 tar -cf "$combined_tar" -C "$backup_dir" "$file_name.tgz.gpg"
@@ -129,7 +131,7 @@ backup() {
         # Remove the original compressed combined tar file
         rm "${combined_tar}.gz"
 
-        # Remove the individual encrypted .tgz files
+        # Remove the individual encrypted .tgz files in backup directory after put them all in one tar file
         rm "${backup_dir}"/*.tgz.gpg
 
         # Copy the backup_dir to the remote server
@@ -138,6 +140,7 @@ backup() {
         # Clean up - remove the backup_dir locally after copying it to the remote server
         rm -r "${backup_dir}"
 
+    # If there is no encrypted .tgz files in backup_dir, that means there is no modified file within the days_threshold
     else
         echo "there are no modified files in $source_directory within the last $days_threshold day(s) to be backedup"
         rmdir $backup_dir
