@@ -61,7 +61,7 @@ Example:
 ```
 ./backup.sh /path/to/source_directory /path/to/remote/backup_directory <encryption_key> <days_threshold>
 ```
-![](https://github.com/IbrahimmAdel/Bash_Task/blob/master/videos/backup.gif)
+![](https://github.com/IbrahimmAdel/Secure_Backup_Restore_Bash/blob/master/videos/backup.gif)
 ---
 ### [restore.sh](https://github.com/IbrahimmAdel/Bash_Task/blob/master/scripts/restore.sh)
 
@@ -76,5 +76,5 @@ Example:
 ```bash
 ./restore.sh /path/to/remote/backup_directory /path/to/restored_directory <decryption_key>
 ```
-![](https://github.com/IbrahimmAdel/Bash_Task/blob/master/videos/restore.gif)
+![](https://github.com/IbrahimmAdel/Secure_Backup_Restore_Bash/blob/master/videos/restore.gif)
 * ## **For more details: [Scripts](https://github.com/IbrahimmAdel/Bash_Task/tree/master/scripts), [Screenshots](https://github.com/IbrahimmAdel/Bash_Task/tree/master/Screenshots)** 
