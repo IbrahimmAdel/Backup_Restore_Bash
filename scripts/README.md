@@ -2,7 +2,7 @@
 > This document provides an overview of the **backup.sh**, **restore.sh**, **backup_restore_lib.sh** scripts to automate backups and restore backup files to/from a remote server.
 ## Requirements
 - Having a remote server.
-- Changing the remote server variables in [backup_restore_lib.sh](https://github.com/IbrahimmAdel/Bash_Task/blob/master/scripts/backup_restore_lib.sh) with your server values.
+- Changing the remote server variables in [backup_restore_lib.sh](https://github.com/IbrahimmAdel/Secure_Backup_Restore_Bash/blob/master/scripts/backup_restore_lib.sh) with your server values.
 ```
 # Variables for the remote server that will perform backup and restore on/from it. In this case, it is an EC2 instance on AWS
 export server_username='ubuntu' 
@@ -14,7 +14,7 @@ export server_key='/home/ibrahim/Downloads/key.pem'
  gpg --gen-key
 ```
 ------
-## [backup.sh](https://github.com/IbrahimmAdel/Bash_Task/blob/master/scripts/backup.sh) 
+## [backup.sh](https://github.com/IbrahimmAdel/Secure_Backup_Restore_Bash/blob/master/scripts/backup.sh) 
 ### calls 2 functions from **backup_restore_lib.sh** script 
 1. ### `validate_backup_params`:
 - #### validate the number of required parameters (4) to run **backup.sh** script.
@@ -33,7 +33,7 @@ export server_key='/home/ibrahim/Downloads/key.pem'
 - #### if not exist, script will print "there are no modified files in $source_directory within the last $days_threshold day(s) to be backedup"
 ------
 
-## [restore.sh](https://github.com/IbrahimmAdel/Bash_Task/blob/master/scripts/restore.sh)
+## [restore.sh](https://github.com/IbrahimmAdel/Secure_Backup_Restore_Bash/blob/master/scripts/restore.sh)
 ### calls 2 functions from **backup_restore_lib.sh** script 
  1. ### `validate_restore_params`:
 - #### First, validate the number of required parameters (3) to run **restore.sh** script
